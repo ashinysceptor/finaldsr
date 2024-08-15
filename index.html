@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css"
+    />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+      /* Your custom CSS here */
+      .input {
+        width: 340px; /* Adjust the width as needed */
+      }
+      .title {
+        
+        text-align: center;
+       font-size: 32px; /* Adjust the size as needed */
+       height: 30px;
+      }
+
+
+
+    </style>
+  </head>
+  <body>
+    <section class="hero is-primary is-bold">
+      <div class="hero-body">
+        <div class="container">
+          <h1 class="title">Daily Sales Report</h1>
+        </div>
+      </div>
+    </section>
+    <form id="form" class="container m-4 pl-4" method="POST">
+
+      
+      <div class="field">
+        <label class="label">Date</label>
+        <div class="control">
+          <input
+            class="input"
+            type="date"
+            placeholder="Date"
+            name="Date"
+          />
+        </div>
+      </div>
+  
+      <div class="field">
+        <label class="label">Name</label>
+        <div class="control">
+          <input
+            class="input"
+            type="text"
+            placeholder="Name"
+            name="Name"
+          />
+        </div>
+      </div>
+
+       <div class="field">
+        <label class="label">State</label>
+        <div class="control">
+          <input
+            class="input"
+            type="text"
+            placeholder="State"
+            name="State"
+          />
+        </div>
+      </div> 
+
+      <div class="field">
+        <label class="label">Area</label>
+        <div class="control">
+          <input
+            class="input"
+            type="text"
+            placeholder="Area"
+            name="Area"
+          />
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="label">Salon Name</label>
+        <div class="control">
+          <input
+            class="input"
+            type="text"
+            placeholder="Salon Name"
+            name="Salon Name"
+          />
+        </div>
+      </div>
+
+
+      <div class="field">
+        <label class="label">Mobile Number</label>
+        <div class="control">
+          <input
+            class="input"
+            type="number"
+            placeholder="Mobile Number"
+            name="Mobile Number"
+          />
+        </div>
+      </div>
+    
+      <div class="field">
+        <label class="label">Order Value</label>
+        <div class="control">
+          <input
+            class="input"
+            type="text"
+            placeholder="Order Value"
+            name="Order Value"
+          />
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="label">Demo Date</label>
+        <div class="control">
+          <input
+            class="input"
+            type="text"
+            placeholder="Demo Date"
+            name="Demo Date"
+          />
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="label">Demo Product</label>
+        <div class="control">
+          <input
+            class="input"
+            type="text"
+            placeholder="Demo Product"
+            name="Demo Product"
+          />
+        </div>
+      </div>
+
+      <!-- <div class="field">
+        <label class="label">Additional Information</label>
+        <div class="control">
+          <textarea
+            class="textarea"
+            placeholder="Any additional information"
+            name="Notes"
+          ></textarea>
+        </div>
+      </div> -->
+
+<br>
+
+      <div class="field is-grouped">
+        <div class="control">
+          <button class="button is-primary" type="submit" id="submit-button">
+            Submit
+          </button>
+        </div>
+        <div class="control">
+          <button class="button is-danger">Cancel</button>
+        </div>
+      </div>
+    </form>
+    <div
+      id="message"
+      style="
+        display: none;
+        margin: 20px;
+        font-weight: bold;
+        color: green;
+        padding: 8px;
+        background-color: beige;
+        border-radius: 4px;
+        border-color: aquamarine;
+      "
+    ></div>
+
+    <script>
+      document.getElementById("form").addEventListener("submit", function (e) {
+        e.preventDefault(); // Prevent the default form submission
+        document.getElementById("message").textContent = "Submitting..";
+        document.getElementById("message").style.display = "block";
+        document.getElementById("submit-button").disabled = true;
+
+        // Collect the form data
+        var formData = new FormData(this);
+        var keyValuePairs = [];
+        for (var pair of formData.entries()) {
+          keyValuePairs.push(pair[0] + "=" + pair[1]);
+        }
+
+        var formDataString = keyValuePairs.join("&");
+
+        // Send a POST request to your Google Apps Script
+        fetch(
+          "https://script.google.com/macros/s/AKfycbyVIwQE9L2-i8uSBD3lGrnZV6L71V4F2irSCHeP_YiKD9NE2m7upH2eWfYo8O80OtUo/exec",
+          {
+            redirect: "follow",
+            method: "POST",
+            body: formDataString,
+            headers: {
+              "Content-Type": "text/plain;charset=utf-8",
+            },
+          }
+        )
+          .then(function (response) {
+            // Check if the request was successful
+            if (response) {
+              return response; // Assuming your script returns JSON response
+            } else {
+              throw new Error("Failed to submit the form.");
+            }
+          })
+          .then(function (data) {
+            // Display a success message
+            document.getElementById("message").textContent =
+              "Data submitted successfully!";
+            document.getElementById("message").style.display = "block";
+            document.getElementById("message").style.backgroundColor = "green";
+            document.getElementById("message").style.color = "beige";
+            document.getElementById("submit-button").disabled = false;
+            document.getElementById("form").reset();
+
+            setTimeout(function () {
+              document.getElementById("message").textContent = "";
+              document.getElementById("message").style.display = "none";
+            }, 2600);
+          })
+          .catch(function (error) {
+            // Handle errors, you can display an error message here
+            console.error(error);
+            document.getElementById("message").textContent =
+              "An error occurred while submitting the form.";
+            document.getElementById("message").style.display = "block";
+          });
+      });
+    </script>
+  </body>
+</html>
